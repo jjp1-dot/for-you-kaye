@@ -1,0 +1,3459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+<title>Every Road — For Kaye</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=Gloria+Hallelujah&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    background: #eee8f7;
+    color: #453650;
+    font-family: "Comfortaa", sans-serif;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+button {
+    -webkit-appearance: none;
+    appearance: none;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+#book {
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.book-shell {
+    width: min(1180px, 96vw);
+    height: min(760px, 92vh);
+    height: min(760px, 92svh);
+    position: relative;
+    perspective: 2200px;
+}
+
+.book {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.paper-stack {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.page {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(100, 70, 120, 0.018) 0px,
+            rgba(100, 70, 120, 0.018) 1px,
+            transparent 1px,
+            transparent 4px
+        ),
+        #fffdf9;
+    border-radius: 5px;
+    box-shadow:
+        0 20px 45px rgba(71, 45, 85, 0.18),
+        0 4px 12px rgba(71, 45, 85, 0.12);
+    transform-origin: left center;
+    transform: rotateY(0deg);
+    transition:
+        transform 0.9s cubic-bezier(.77,0,.18,1),
+        opacity 0.3s ease;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    z-index: 1;
+}
+
+.page.active {
+    visibility: visible;
+    opacity: 1;
+    z-index: 20;
+}
+
+.page.flipped {
+    transform: rotateY(-180deg);
+    visibility: visible;
+    opacity: 1;
+    z-index: 10;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    padding: 55px 65px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #745477;
+    text-align: center;
+    line-height: 1.15;
+}
+
+.small-text {
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+    color: #806c86;
+}
+
+.page-navigation {
+    position: absolute;
+    left: 35px;
+    right: 35px;
+    bottom: 23px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.page-navigation button {
+    pointer-events: auto;
+    border: none;
+    min-height: 44px;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    border-radius: 25px;
+    padding: 11px 19px;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.back-button {
+    background: #eee3ef;
+    color: #765576;
+}
+
+.back-button:hover {
+    background: #e3d5e5;
+    transform: translateX(-2px);
+}
+
+.next-button {
+    background: #745477;
+    color: white;
+    box-shadow:
+        0 7px 16px rgba(116, 84, 119, 0.20);
+}
+
+.next-button:hover {
+    background: #604163;
+    transform: translateX(2px);
+}
+
+.page-navigation button:active {
+    transform: scale(0.96);
+}
+
+.page-number {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #b7a5bd;
+    font-family: "Comfortaa", sans-serif;
+    z-index: 60;
+}
+
+.corner {
+    position: absolute;
+    color: #c8b3d0;
+    font-size: 28px;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.corner.top-left {
+    top: 18px;
+    left: 23px;
+}
+
+.corner.top-right {
+    top: 18px;
+    right: 23px;
+}
+
+.corner.bottom-left {
+    bottom: 18px;
+    left: 23px;
+}
+
+.corner.bottom-right {
+    bottom: 18px;
+    right: 23px;
+}
+
+.intro-page {
+    background: #6f506f;
+    padding: 0;
+}
+
+.intro-book {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+}
+
+.intro-book::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 5px;
+    transform: translateX(-50%);
+    background:
+        linear-gradient(
+            to right,
+            rgba(40, 22, 42, 0.22),
+            rgba(255,255,255,0.25),
+            rgba(40,22,42,0.18)
+        );
+    z-index: 10;
+}
+
+.intro-left,
+.intro-right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.intro-left {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,0.03) 0px,
+            rgba(255,255,255,0.03) 1px,
+            transparent 1px,
+            transparent 4px
+        ),
+        #765776;
+    padding: 45px;
+    color: white;
+    overflow: hidden;
+}
+
+.intro-right {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(110,75,120,0.025) 0px,
+            rgba(110,75,120,0.025) 1px,
+            transparent 1px,
+            transparent 4px
+        ),
+        #fffdf9;
+    padding: 45px 55px;
+    align-items: center;
+    text-align: center;
+}
+
+.intro-heading {
+    text-align: center;
+    margin-bottom: 15px;
+    z-index: 2;
+}
+
+.intro-heading h1 {
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: clamp(36px, 4.5vw, 60px);
+    line-height: 1;
+    letter-spacing: 2px;
+}
+
+.intro-heading p {
+    font-family: "Playfair Display", serif;
+    font-size: 16px;
+    opacity: 0.85;
+    margin-top: 8px;
+}
+
+.fake-map {
+    width: 100%;
+    max-width: 500px;
+    height: 390px;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            125deg,
+            transparent 0 43%,
+            rgba(181, 154, 193, 0.45) 43% 45%,
+            transparent 45% 100%
+        ),
+        linear-gradient(
+            65deg,
+            transparent 0 58%,
+            rgba(181, 154, 193, 0.4) 58% 60%,
+            transparent 60% 100%
+        ),
+        #e5d8c7;
+    box-shadow:
+        inset 0 0 0 1px rgba(70,45,70,0.12),
+        0 12px 30px rgba(38,22,40,0.15);
+}
+
+.fake-map::before {
+    content: "";
+    position: absolute;
+    width: 150%;
+    height: 35px;
+    left: -20%;
+    top: 48%;
+    transform: rotate(-12deg);
+    background: #b8d6d3;
+    opacity: 0.9;
+}
+
+.fake-map::after {
+    content: "";
+    position: absolute;
+    width: 75%;
+    height: 6px;
+    left: 12%;
+    top: 37%;
+    transform: rotate(26deg);
+    background: #c06b6b;
+    box-shadow:
+        0 28px 0 rgba(192,107,107,0.8),
+        0 -45px 0 rgba(192,107,107,0.65);
+}
+
+.map-label {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 700;
+    color: #6d5868;
+    z-index: 3;
+}
+
+.map-label.camarin {
+    top: 12%;
+    left: 10%;
+}
+
+.map-label.caloocan {
+    top: 22%;
+    right: 12%;
+}
+
+.map-label.malabon {
+    bottom: 16%;
+    left: 13%;
+}
+
+.map-label.river {
+    bottom: 25%;
+    right: 10%;
+    color: #5d8e91;
+}
+
+.pin {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 6;
+    box-shadow:
+        0 5px 12px rgba(40,20,40,0.18);
+}
+
+.pin span {
+    transform: rotate(45deg);
+    color: white;
+    font-size: 16px;
+}
+
+.pin.you {
+    top: 29%;
+    right: 27%;
+    background: #9b70a4;
+}
+
+.pin.me {
+    bottom: 27%;
+    left: 25%;
+    background: #d38ba3;
+}
+
+.pin-label {
+    position: absolute;
+    white-space: nowrap;
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: 13px;
+    color: #694d69;
+    z-index: 7;
+}
+
+.you-label {
+    top: 24%;
+    right: 14%;
+}
+
+.me-label {
+    bottom: 21%;
+    left: 14%;
+}
+
+.map-heart {
+    position: absolute;
+    font-size: 22px;
+    z-index: 5;
+    opacity: 0.7;
+}
+
+.map-heart.one {
+    left: 17%;
+    top: 18%;
+}
+
+.map-heart.two {
+    right: 17%;
+    bottom: 18%;
+}
+
+.intro-greeting {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(24px, 3vw, 34px);
+    margin-bottom: 8px;
+}
+
+.intro-subtitle {
+    font-family: "Playfair Display", serif;
+    font-size: 15px;
+    color: #927c94;
+    margin-bottom: 22px;
+}
+
+.start-button {
+    border: none;
+    background: #765576;
+    color: white;
+    border-radius: 30px;
+    min-height: 46px;
+    padding: 14px 30px;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow:
+        0 8px 18px rgba(118,85,118,0.22);
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.3s ease;
+}
+
+.start-button:hover {
+    transform: translateY(-3px);
+    background: #5f4161;
+    box-shadow:
+        0 11px 22px rgba(118,85,118,0.28);
+}
+
+.start-button:active {
+    transform: scale(0.96);
+}
+
+.start-button.started {
+    opacity: 0.75;
+}
+
+.passcode-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: translateY(12px);
+    pointer-events: none;
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease,
+        max-height 0.55s ease;
+}
+
+.passcode-area.show {
+    opacity: 1;
+    max-height: 440px;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.passcode-title {
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: 24px;
+    color: #604663;
+    margin-bottom: 14px;
+    text-align: center;
+}
+
+.passcode-display {
+    width: 220px;
+    height: 48px;
+    border: 1.5px solid #cdbbd1;
+    border-radius: 12px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    box-shadow:
+        0 5px 15px rgba(80,50,85,0.06);
+}
+
+.passcode-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ded2df;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.passcode-dot.filled {
+    background: #765576;
+    transform: scale(1.12);
+}
+
+.keypad {
+    width: min(260px, 100%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+}
+
+.key {
+    border: none;
+    min-height: 44px;
+    height: 40px;
+    border-radius: 12px;
+    background: #f0e7f1;
+    color: #604663;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow:
+        0 3px 7px rgba(75,45,80,0.08);
+    transition:
+        transform 0.12s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.key:hover {
+    background: #e5d7e7;
+    transform: translateY(-1px);
+}
+
+.key:active {
+    transform: scale(0.94);
+    box-shadow:
+        0 1px 3px rgba(75,45,80,0.08);
+}
+
+.key.clear-key {
+    background: #eaddea;
+    color: #8d668f;
+}
+
+.key.backspace-key {
+    background: #eaddea;
+    color: #8d668f;
+    font-size: 14px;
+}
+
+.unlock {
+    border: none;
+    background: #765576;
+    color: white;
+    border-radius: 30px;
+    min-height: 44px;
+    padding: 10px 28px;
+    margin-top: 10px;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+    box-shadow:
+        0 8px 18px rgba(118,85,118,0.22);
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.unlock:hover {
+    transform: translateY(-2px);
+    background: #5f4161;
+}
+
+.unlock:active {
+    transform: scale(0.97);
+}
+
+.hint-button {
+    border: none;
+    background: transparent;
+    color: #a08aa2;
+    min-height: 32px;
+    margin-top: 5px;
+    padding: 5px 10px;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.hint-text {
+    min-height: 16px;
+    margin-top: 3px;
+    font-size: 9px;
+    color: #9b7da0;
+    font-style: italic;
+    text-align: center;
+}
+
+.unlock-message {
+    min-height: 17px;
+    margin-top: 2px;
+    font-size: 10px;
+    color: #9b668c;
+    text-align: center;
+}
+
+.welcome-page .content {
+    text-align: center;
+}
+
+.welcome-small {
+    font-size: 13px;
+    color: #a187a4;
+    margin-bottom: 15px;
+}
+
+.welcome-title {
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: clamp(40px, 6vw, 70px);
+    color: #765576;
+    margin-bottom: 18px;
+}
+
+.welcome-heart {
+    font-size: 42px;
+    margin-bottom: 15px;
+    animation:
+        tinyFloat 2.8s ease-in-out infinite;
+}
+
+.welcome-text {
+    max-width: 560px;
+    font-family: "Playfair Display", serif;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #6e5a70;
+}
+
+.welcome-text strong {
+    color: #765576;
+}
+
+.birthday-page .content {
+    padding-left: 90px;
+    padding-right: 90px;
+}
+
+.birthday-kicker {
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: 18px;
+    color: #ad88ae;
+    margin-bottom: 10px;
+}
+
+.birthday-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(38px, 5vw, 62px);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.birthday-subtitle {
+    font-family: "Playfair Display", serif;
+    font-size: 19px;
+    color: #7b657d;
+    max-width: 720px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.birthday-body {
+    max-width: 720px;
+    font-size: 14px;
+    line-height: 1.9;
+    color: #78667a;
+    text-align: center;
+}
+
+.birthday-body strong {
+    color: #765576;
+}
+
+.birthday-page h6 {
+    margin-top: 7px;
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: 12px;
+    font-weight: 400;
+    color: #ad88ae;
+}
+
+.birthday-doodles {
+    margin-top: 27px;
+    display: flex;
+    gap: 20px;
+    font-size: 25px;
+    color: #b493ba;
+}
+
+.float-item {
+    animation:
+        tinyFloat 3s ease-in-out infinite;
+}
+
+.float-item:nth-child(2) {
+    animation-delay: .5s;
+}
+
+.float-item:nth-child(3) {
+    animation-delay: 1s;
+}
+
+.photos-page .content {
+    padding-top: 30px;
+    padding-bottom: 80px;
+}
+
+.photos-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(28px, 4vw, 43px);
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.photos-subtitle {
+    font-size: 12px;
+    color: #927b94;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.photos-grid {
+    width: 100%;
+    max-width: 850px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.photo-card {
+    background: white;
+    padding: 8px 8px 10px;
+    border-radius: 5px;
+    box-shadow:
+        0 5px 15px rgba(75,45,80,0.13);
+    transform: rotate(-1deg);
+    transition:
+        transform 0.2s ease;
+}
+
+.photo-card:nth-child(2) {
+    transform: rotate(1.2deg);
+}
+
+.photo-card:nth-child(3) {
+    transform: rotate(-0.5deg);
+}
+
+.photo-card:nth-child(4) {
+    transform: rotate(1deg);
+}
+
+.photo-card:nth-child(5) {
+    transform: rotate(-1.3deg);
+}
+
+.photo-card:nth-child(6) {
+    transform: rotate(.5deg);
+}
+
+.photo-card:hover {
+    transform: rotate(0deg) translateY(-4px);
+}
+
+.photo-card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    display: block;
+    border-radius: 3px;
+    background: #e9ddec;
+}
+
+.photo-caption {
+    text-align: center;
+    margin-top: 7px;
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: 10px;
+    color: #765576;
+}
+
+.photos-ending {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #987f9b;
+    text-align: center;
+}
+
+.envelope-page .content {
+    padding: 40px;
+}
+
+.envelope-kicker {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #a080a5;
+    font-size: 20px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.envelope-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(32px, 4vw, 48px);
+    margin-bottom: 7px;
+    text-align: center;
+}
+
+.envelope-subtitle {
+    font-size: 12px;
+    color: #947d96;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.envelope-area {
+    width: 100%;
+    max-width: 700px;
+    min-height: 330px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.envelope-wrapper {
+    position: relative;
+    width: 300px;
+    height: 205px;
+    cursor: pointer;
+    perspective: 900px;
+    transition:
+        transform 0.25s ease;
+}
+
+.envelope-wrapper:hover {
+    transform: translateY(-5px);
+}
+
+.envelope {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: #d9b9d9;
+    box-shadow:
+        0 18px 35px rgba(91,57,95,0.2);
+    overflow: visible;
+}
+
+.envelope-front {
+    position: absolute;
+    inset: 0;
+    background: #d8b6d6;
+    clip-path: polygon(
+        0 0,
+        50% 52%,
+        100% 0,
+        100% 100%,
+        0 100%
+    );
+    z-index: 4;
+    border-radius: 8px;
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    background: #e6cde4;
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.envelope-flap {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 120px;
+    background: #cda6cd;
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        50% 100%
+    );
+    transform-origin: top center;
+    z-index: 5;
+    transition:
+        transform 0.8s cubic-bezier(.65,.05,.36,1);
+}
+
+.envelope-seal {
+    position: absolute;
+    left: 50%;
+    top: 47%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #765576;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    z-index: 8;
+    box-shadow:
+        0 5px 12px rgba(70,42,72,0.18);
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease;
+}
+
+.envelope-label {
+    position: absolute;
+    bottom: -42px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: 15px;
+    transition:
+        opacity 0.3s ease;
+}
+
+.envelope-wrapper.open {
+    cursor: default;
+}
+
+.envelope-wrapper.open:hover {
+    transform: none;
+}
+
+.envelope-wrapper.open .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+.envelope-wrapper.open .envelope-seal {
+    opacity: 0;
+    transform:
+        translate(-50%, -50%)
+        scale(.5);
+}
+
+.envelope-wrapper.open .envelope-label {
+    opacity: 0;
+}
+
+.hidden-letter {
+    position: absolute;
+    width: min(650px, 90%);
+    max-height: 430px;
+    padding: 35px 40px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(110,80,120,0.018) 0px,
+            rgba(110,80,120,0.018) 1px,
+            transparent 1px,
+            transparent 4px
+        ),
+        #fffaf1;
+    border: 1px solid #e5d6df;
+    border-radius: 5px;
+    box-shadow:
+        0 18px 40px rgba(75,45,80,0.17);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transform:
+        translateY(30px)
+        scale(.95);
+    pointer-events: none;
+    transition:
+        opacity .7s ease,
+        transform .7s ease;
+    z-index: 20;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hidden-letter.show {
+    opacity: 1;
+    transform:
+        translateY(0)
+        scale(1);
+    pointer-events: auto;
+}
+
+.hidden-letter h3 {
+    font-family: "Gloria Hallelujah", cursive;
+    text-align: center;
+    font-size: 25px;
+    color: #765576;
+    margin-bottom: 20px;
+}
+
+.hidden-letter p {
+    font-family: "Playfair Display", serif;
+    font-size: 14px;
+    line-height: 1.85;
+    color: #665568;
+    margin-bottom: 15px;
+}
+
+.hidden-letter .signature {
+    text-align: right;
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    margin-top: 20px;
+}
+
+.letter-close-hint {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 10px;
+    color: #ae94ad;
+}
+
+.story-page .content {
+    padding: 40px 80px 85px;
+}
+
+.story-kicker {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #a080a5;
+    font-size: 20px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.story-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(34px, 4.5vw, 53px);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.story-card {
+    width: min(760px, 100%);
+    max-height: 420px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 27px 40px;
+    background: rgba(249, 243, 249, 0.72);
+    border-left: 3px solid #c8a8c9;
+    border-right: 3px solid #c8a8c9;
+    border-radius: 8px;
+}
+
+.story-card p {
+    font-family: "Playfair Display", serif;
+    font-size: 15px;
+    line-height: 1.9;
+    color: #665568;
+    margin-bottom: 18px;
+    text-align: left;
+}
+
+.story-card .story-highlight {
+    font-family: "Gloria Hallelujah", cursive;
+    text-align: center;
+    color: #765576;
+    font-size: 18px;
+    margin: 25px 0;
+}
+
+.feelings-page .content {
+    text-align: center;
+}
+
+.feelings-kicker {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #a080a5;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.feelings-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(32px, 4.5vw, 55px);
+    margin-bottom: 30px;
+}
+
+.reveal-box {
+    width: min(720px, 90%);
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    border-radius: 18px;
+    background: #faf4fa;
+    border: 1px solid #ead9e9;
+    box-shadow:
+        0 12px 30px rgba(82,53,86,0.08);
+}
+
+.reveal-line {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(17px, 2vw, 22px);
+    line-height: 1.7;
+    color: #665568;
+    opacity: 1;
+    transition:
+        opacity .35s ease,
+        transform .35s ease;
+}
+
+.reveal-line.fade {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.ask-page .content {
+    text-align: center;
+}
+
+.ask-kicker {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #ad8cad;
+    font-size: 17px;
+    margin-bottom: 17px;
+}
+
+.ask-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(38px, 5vw, 62px);
+    max-width: 750px;
+    line-height: 1.25;
+    margin-bottom: 18px;
+}
+
+.ask-text {
+    font-family: "Playfair Display", serif;
+    color: #786678;
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 580px;
+}
+
+.final-page .content {
+    text-align: center;
+}
+
+.final-sparkle {
+    font-size: 28px;
+    color: #b596b9;
+    margin-bottom: 12px;
+}
+
+.final-title {
+    font-family: "Gloria Hallelujah", cursive;
+    color: #765576;
+    font-size: clamp(35px, 5vw, 62px);
+    max-width: 850px;
+    line-height: 1.25;
+    margin-bottom: 20px;
+}
+
+.answer-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.answer {
+    border: none;
+    border-radius: 30px;
+    min-height: 48px;
+    padding: 14px 28px;
+    font-family: "Comfortaa", sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.yes-button {
+    background: #765576;
+    color: white;
+    box-shadow:
+        0 8px 18px rgba(118,85,118,.2);
+}
+
+.no-button {
+    background: #eaddea;
+    color: #765576;
+}
+
+.answer:hover {
+    transform: translateY(-2px);
+}
+
+.answer:active {
+    transform: scale(.96);
+}
+
+.final-result {
+    min-height: 35px;
+    margin-top: 25px;
+    font-family: "Gloria Hallelujah", cursive;
+    font-size: 17px;
+    color: #765576;
+}
+
+@keyframes tinyFloat {
+
+    0%,100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+
+}
+
+@media (min-width: 900px)
+and (max-width: 1300px)
+and (orientation: landscape) {
+
+    #book {
+        padding: 10px;
+    }
+
+    .book-shell {
+        width: 94vw;
+        height: min(90vh, 730px);
+        height: min(90svh, 730px);
+    }
+
+    .intro-left {
+        padding: 25px 28px;
+    }
+
+    .intro-right {
+        padding: 24px 28px;
+    }
+
+    .intro-heading {
+        margin-bottom: 10px;
+    }
+
+    .intro-heading h1 {
+        font-size: 40px;
+    }
+
+    .intro-heading p {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .fake-map {
+        height: 285px;
+    }
+
+    .intro-greeting {
+        font-size: 28px;
+        margin-bottom: 5px;
+    }
+
+    .intro-subtitle {
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+    .start-button {
+        min-height: 44px;
+        padding: 11px 25px;
+    }
+
+    .passcode-title {
+        font-size: 20px;
+        margin-bottom: 9px;
+    }
+
+    .passcode-display {
+        width: 210px;
+        height: 44px;
+        margin-bottom: 9px;
+    }
+
+    .keypad {
+        width: 250px;
+        gap: 6px;
+    }
+
+    .key {
+        height: 44px;
+        min-height: 44px;
+        font-size: 15px;
+    }
+
+    .unlock {
+        min-height: 44px;
+        margin-top: 7px;
+        padding: 9px 25px;
+    }
+
+    .hint-button {
+        min-height: 30px;
+        margin-top: 3px;
+    }
+
+    .hint-text {
+        min-height: 14px;
+        margin-top: 1px;
+    }
+
+    .unlock-message {
+        min-height: 15px;
+        margin-top: 1px;
+    }
+
+    .birthday-page .content {
+        padding: 40px 70px 75px;
+    }
+
+    .birthday-subtitle {
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    .birthday-body {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .birthday-doodles {
+        margin-top: 18px;
+    }
+
+    .photos-page .content {
+        padding: 25px 55px 70px;
+    }
+
+    .photos-grid {
+        max-width: 760px;
+        gap: 9px;
+    }
+
+    .photo-card {
+        padding: 6px 6px 8px;
+    }
+
+    .photo-caption {
+        font-size: 9px;
+        margin-top: 5px;
+    }
+
+    .photos-ending {
+        margin-top: 7px;
+    }
+
+    .envelope-page .content {
+        padding: 30px 50px 75px;
+    }
+
+    .envelope-area {
+        min-height: 285px;
+    }
+
+    .hidden-letter {
+        max-height: 380px;
+        padding: 28px 34px;
+    }
+
+    .story-page .content {
+        padding: 30px 60px 75px;
+    }
+
+    .story-card {
+        max-height: 380px;
+        padding: 24px 34px;
+    }
+
+    .story-card p {
+        font-size: 14px;
+        line-height: 1.8;
+        margin-bottom: 14px;
+    }
+
+    .feelings-title {
+        margin-bottom: 22px;
+    }
+
+    .reveal-box {
+        min-height: 140px;
+        padding: 25px;
+    }
+
+    .ask-title {
+        max-width: 650px;
+    }
+
+    .final-note {
+        margin-bottom: 22px;
+    }
+
+    .page-navigation {
+        bottom: 15px;
+    }
+
+    .page-navigation button {
+        min-height: 44px;
+    }
+
+    .page-number {
+        bottom: 13px;
+    }
+
+}
+
+@media (orientation: landscape)
+and (max-height: 700px) {
+
+    #book {
+        padding: 8px;
+    }
+
+    .book-shell {
+        height: 94vh;
+        height: 94svh;
+    }
+
+    .content {
+        padding: 25px 45px 65px;
+    }
+
+    .page-number {
+        bottom: 8px;
+    }
+
+    .page-navigation {
+        bottom: 10px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .page-navigation button {
+        min-height: 40px;
+        padding: 8px 15px;
+    }
+
+    .photos-grid {
+        gap: 7px;
+    }
+
+    .photo-card {
+        padding: 5px 5px 7px;
+    }
+
+    .photos-title {
+        font-size: 28px;
+    }
+
+    .photos-subtitle {
+        margin-bottom: 7px;
+    }
+
+    .photos-ending {
+        margin-top: 6px;
+    }
+
+    .hidden-letter {
+        max-height: 300px;
+        padding: 23px 28px;
+    }
+
+    .envelope-area {
+        min-height: 270px;
+    }
+
+    .story-card {
+        max-height: 300px;
+    }
+
+    .passcode-title {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+
+    .passcode-display {
+        height: 38px;
+        margin-bottom: 8px;
+    }
+
+    .key {
+        height: 36px;
+        min-height: 36px;
+    }
+
+    .unlock {
+        margin-top: 7px;
+        padding: 8px 25px;
+        min-height: 40px;
+    }
+
+}
+
+@media (max-width: 899px) {
+
+    body {
+        overflow: auto;
+    }
+
+    #book {
+        min-height: 100vh;
+        min-height: 100svh;
+        height: auto;
+        padding: 8px;
+        align-items: flex-start;
+    }
+
+    .book-shell {
+        width: 96vw;
+        height: auto;
+        min-height: 900px;
+    }
+
+    .paper-stack {
+        min-height: 900px;
+    }
+
+    .page {
+        min-height: 900px;
+        height: auto;
+    }
+
+    .content {
+        min-height: 900px;
+        padding: 50px 35px 90px;
+    }
+
+    .page-navigation {
+        bottom: 18px;
+        left: 22px;
+        right: 22px;
+    }
+
+    .page-navigation button {
+        min-height: 46px;
+        padding: 10px 17px;
+    }
+
+    .intro-book {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 900px;
+    }
+
+    .intro-book::after {
+        display: none;
+    }
+
+    .intro-left {
+        min-height: 410px;
+        padding: 35px 25px;
+    }
+
+    .intro-right {
+        min-height: 490px;
+        padding: 35px 25px 45px;
+    }
+
+    .fake-map {
+        height: 300px;
+        max-width: 470px;
+    }
+
+    .intro-heading h1 {
+        font-size: 42px;
+    }
+
+    .intro-greeting {
+        font-size: 30px;
+    }
+
+    .photos-page .content {
+        padding-bottom: 90px;
+    }
+
+    .photos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 600px;
+    }
+
+    .hidden-letter {
+        max-height: 600px;
+    }
+
+    .story-card {
+        max-height: 570px;
+    }
+
+    .envelope-wrapper {
+        touch-action: manipulation;
+    }
+
+    .reveal-box {
+        width: min(720px, 94%);
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    #book {
+        padding: 5px;
+    }
+
+    .book-shell {
+        width: 98vw;
+        min-height: 850px;
+    }
+
+    .paper-stack {
+        min-height: 850px;
+    }
+
+    .page {
+        min-height: 850px;
+    }
+
+    .content {
+        min-height: 850px;
+        padding: 40px 22px 85px;
+    }
+
+    .page-navigation {
+        left: 12px;
+        right: 12px;
+        bottom: 13px;
+    }
+
+    .page-navigation button {
+        min-height: 44px;
+        font-size: 9px;
+        padding: 9px 13px;
+    }
+
+    .page-number {
+        bottom: 10px;
+        font-size: 9px;
+    }
+
+    .corner {
+        font-size: 23px;
+    }
+
+    .intro-left {
+        padding: 25px 18px;
+        min-height: 350px;
+    }
+
+    .intro-right {
+        padding: 30px 18px 42px;
+        min-height: 500px;
+    }
+
+    .fake-map {
+        height: 240px;
+    }
+
+    .intro-heading h1 {
+        font-size: 34px;
+    }
+
+    .intro-heading p {
+        font-size: 13px;
+    }
+
+    .intro-greeting {
+        font-size: 25px;
+    }
+
+    .intro-subtitle {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .start-button {
+        font-size: 11px;
+        min-height: 44px;
+        padding: 11px 25px;
+    }
+
+    .passcode-title {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .passcode-display {
+        width: 200px;
+        height: 43px;
+        margin-bottom: 10px;
+    }
+
+    .passcode-dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    .keypad {
+        width: 235px;
+        gap: 6px;
+    }
+
+    .key {
+        height: 42px;
+        min-height: 42px;
+        font-size: 14px;
+    }
+
+    .unlock {
+        min-height: 44px;
+        padding: 10px 25px;
+    }
+
+    .birthday-page .content {
+        padding: 40px 25px 85px;
+    }
+
+    .birthday-kicker {
+        font-size: 16px;
+    }
+
+    .birthday-title {
+        font-size: 38px;
+    }
+
+    .birthday-subtitle {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .birthday-body {
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .birthday-doodles {
+        margin-top: 20px;
+    }
+
+    .photos-page .content {
+        padding: 30px 20px 85px;
+    }
+
+    .photos-title {
+        font-size: 29px;
+    }
+
+    .photos-subtitle {
+        font-size: 11px;
+        margin-bottom: 14px;
+    }
+
+    .photos-grid {
+        gap: 8px;
+    }
+
+    .photo-card {
+        padding: 6px 6px 8px;
+    }
+
+    .photo-caption {
+        font-size: 8px;
+    }
+
+    .photos-ending {
+        font-size: 9px;
+    }
+
+    .envelope-page .content {
+        padding: 35px 20px 85px;
+    }
+
+    .envelope-wrapper {
+        width: 250px;
+        height: 170px;
+    }
+
+    .envelope-flap {
+        height: 100px;
+    }
+
+    .envelope-area {
+        min-height: 300px;
+    }
+
+    .hidden-letter {
+        width: 94%;
+        max-height: 620px;
+        padding: 25px 22px;
+    }
+
+    .hidden-letter h3 {
+        font-size: 22px;
+        margin-bottom: 17px;
+    }
+
+    .hidden-letter p {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .story-page .content {
+        padding: 40px 22px 85px;
+    }
+
+    .story-title {
+        font-size: 34px;
+    }
+
+    .story-card {
+        max-height: 570px;
+        padding: 25px 22px;
+    }
+
+    .story-card p {
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .story-card .story-highlight {
+        font-size: 16px;
+    }
+
+    .feelings-kicker {
+        font-size: 13px;
+    }
+
+    .feelings-title {
+        font-size: 32px;
+        margin-bottom: 22px;
+    }
+
+    .reveal-box {
+        width: 94%;
+        min-height: 145px;
+        padding: 22px;
+    }
+
+    .reveal-line {
+        font-size: 16px;
+        line-height: 1.65;
+    }
+
+    .ask-kicker {
+        font-size: 15px;
+    }
+
+    .ask-title {
+        font-size: 37px;
+    }
+
+    .ask-text {
+        font-size: 15px;
+    }
+
+    .final-title {
+        font-size: 37px;
+    }
+
+    .final-note {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .answer {
+        min-height: 48px;
+        padding: 13px 25px;
+    }
+
+    .final-result {
+        font-size: 15px;
+    }
+
+}
+
+@media (hover: none) {
+
+    .photo-card:hover,
+    .envelope-wrapper:hover,
+    .next-button:hover,
+    .unlock:hover,
+    .answer:hover,
+    .back-button:hover,
+    .start-button:hover,
+    .key:hover {
+        transform: none;
+    }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="book">
+
+    <div class="book-shell">
+
+        <div class="book">
+
+            <div class="paper-stack">
+
+                <section
+                    class="page active intro-page"
+                    id="introPage"
+                >
+
+                    <div class="intro-book">
+
+                        <div class="intro-left">
+
+                            <div class="intro-heading">
+
+                                <h1>EVERY ROAD</h1>
+
+                                <p>
+                                    leads back to you 
+                                </p>
+
+                            </div>
+
+                            <div class="fake-map">
+
+                                <span class="map-label camarin">
+                                    CAMARIN
+                                </span>
+
+                                <span class="map-label caloocan">
+                                    CALOOCAN CITY
+                                </span>
+
+                                <span class="map-label malabon">
+                                    MALABON CITY
+                                </span>
+
+                                <span class="map-label river">
+                                    TULLAHAN RIVER
+                                </span>
+
+                                <div class="pin you">
+                                    <span>♡</span>
+                                </div>
+
+                                <div class="pin-label you-label">
+                                    ME ♡
+                                </div>
+
+                                <div class="pin me">
+                                    <span>♡</span>
+                                </div>
+
+                                <div class="pin-label me-label">
+                                    YOU ♡
+                                </div>
+
+                                <div class="map-heart one">
+                                    ♡
+                                </div>
+
+                                <div class="map-heart two">
+                                    ♡
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="intro-right">
+
+                            <div class="intro-greeting">
+                                Halu, Kaye. ♡
+                            </div>
+
+                            <div class="intro-subtitle">
+                                I made something for you.
+                            </div>
+
+                            <button
+                                class="start-button"
+                                id="startButton"
+                                onclick="openIntro()"
+                            >
+                                open it ♡
+                            </button>
+
+                            <div
+                                class="passcode-area"
+                                id="passcodeArea"
+                            >
+
+                                <div class="passcode-title">
+                                    Enter the passcode to continue...
+                                </div>
+
+                                <div
+                                    class="passcode-display"
+                                    id="passcodeDisplay"
+                                >
+
+                                    <span class="passcode-dot"></span>
+                                    <span class="passcode-dot"></span>
+                                    <span class="passcode-dot"></span>
+                                    <span class="passcode-dot"></span>
+                                    <span class="passcode-dot"></span>
+                                    <span class="passcode-dot"></span>
+
+                                </div>
+
+                                <div class="keypad">
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('1')"
+                                    >
+                                        1
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('2')"
+                                    >
+                                        2
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('3')"
+                                    >
+                                        3
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('4')"
+                                    >
+                                        4
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('5')"
+                                    >
+                                        5
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('6')"
+                                    >
+                                        6
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('7')"
+                                    >
+                                        7
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('8')"
+                                    >
+                                        8
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('9')"
+                                    >
+                                        9
+                                    </button>
+
+                                    <button
+                                        class="key clear-key"
+                                        onclick="clearCode()"
+                                    >
+                                        C
+                                    </button>
+
+                                    <button
+                                        class="key"
+                                        onclick="pressKey('0')"
+                                    >
+                                        0
+                                    </button>
+
+                                    <button
+                                        class="key backspace-key"
+                                        onclick="deleteKey()"
+                                    >
+                                        ←
+                                    </button>
+
+                                </div>
+
+                                <button
+                                    class="unlock"
+                                    onclick="unlockIntro()"
+                                >
+                                    UNLOCK ♡
+                                </button>
+
+                                <button
+                                    class="hint-button"
+                                    onclick="giveIntroHint()"
+                                >
+                                    need a hint?
+                                </button>
+
+                                <div
+                                    class="hint-text"
+                                    id="hintText"
+                                ></div>
+
+                                <div
+                                    class="unlock-message"
+                                    id="unlockMessage"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page welcome-page"
+                    id="welcomePage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">♡</div>
+                        <div class="corner top-right">✦</div>
+
+                        <div class="welcome-small">
+                            okay...
+                        </div>
+
+                        <div class="welcome-heart">
+                            ♡
+                        </div>
+
+                        <h1 class="welcome-title">
+                            You Made It.
+                        </h1>
+
+                        <p class="welcome-text">
+                            You officially made it inside. So galing, baby! <br>
+                            penge shanghai.. ay
+                            <br><br>
+                            I hope you know I actually spent time
+                            making this whole thing for you.
+                            <br><br>
+                            So... <strong>keep going.</strong>
+                            There's still a lot more.
+                        </p>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                onclick="nextPage()"
+                            >
+                                okay, continue →
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            01
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page birthday-page"
+                    id="birthdayPage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">✦</div>
+                        <div class="corner bottom-right">♡</div>
+
+                        <div class="birthday-kicker">
+                            today is about you ♡
+                        </div>
+
+                        <h1 class="birthday-title">
+                            Happy Birthday, Kaye!
+                        </h1>
+
+                        <p class="birthday-subtitle">
+                            I hope this year gives you more reasons
+                            to smile, laugh, grow, and be happy.
+                        </p>
+
+                        <p class="birthday-body">
+                            You deserve beautiful things in life,
+                            not just the big exciting ones,
+                            but also the small things that make
+                            ordinary days feel a little lighter.
+                            <br><br>
+
+                            I hope you get to experience more moments
+                            that make you genuinely happy,
+                            more people who appreciate you,
+                            more dreams that slowly become real,
+                            and more reasons to be proud of the
+                            person you're becoming.
+                            <br><br>
+
+                            And most importantly,
+                            I hope you never forget that your birthday
+                            is a celebration of <strong>you</strong>. So
+                            go and take those photos.
+                        </p>
+
+                        <h6>
+                            and send it to me
+                        </h6>
+
+                        <div class="birthday-doodles">
+
+                            <span class="float-item">♡</span>
+                            <span class="float-item">✦</span>
+                            <span class="float-item">♡</span>
+
+                        </div>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                onclick="nextPage()"
+                            >
+                                now, let me show you something →
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            02
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page photos-page"
+                    id="photosPage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">♡</div>
+
+                        <h1 class="photos-title">
+                            My cutie derpy princesss :>
+                        </h1>
+
+                        <p class="photos-subtitle">
+                            I also need to expose you a little.
+                        </p>
+
+                        <div class="photos-grid">
+
+                            <div class="photo-card">
+                                <img
+                                    src="images/kaye1.jpg"
+                                    alt="Kaye photo"
+                                >
+                                <div class="photo-caption">
+                                    cutiee, parang hindi nang aaway
+                                </div>
+                            </div>
+
+                            <div class="photo-card">
+                                <img
+                                    src="images/kaye2.jpg"
+                                    alt="Kaye photo"
+                                >
+                                <div class="photo-caption">
+                                    kawawa achuchu ang baby na yan
+                                </div>
+                            </div>
+
+                            <div class="photo-card">
+                                <img
+                                    src="images/kaye3.jpg"
+                                    alt="Kaye photo"
+                                >
+                                <div class="photo-caption">
+                                    trying to look so innocent huh hahaha
+                                </div>
+                            </div>
+
+                            <div class="photo-card">
+                                <img
+                                    src="images/kaye4.jpg"
+                                    alt="Kaye photo"
+                                >
+                                <div class="photo-caption">
+                                    oh fuck..
+                                </div>
+                            </div>
+
+                            <div class="photo-card">
+                                <img
+                                    src="images/kaye5.jpg"
+                                    alt="Kaye photo"
+                                >
+                                <div class="photo-caption">
+                                    okay this one is cute
+                                </div>
+                            </div>
+
+                            <div class="photo-card">
+                                <img
+                                    src="images/kaye6.jpg"
+                                    alt="Kaye photo"
+                                >
+                                <div class="photo-caption">
+                                    and THIS IS SO CUTEEE 😭
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="photos-ending">
+                            You will never know her fav pose is missionary.
+                            AY MALI, WRONG SINT
+                        </div>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                onclick="nextPage()"
+                            >
+                                continue →
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            03
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page envelope-page"
+                    id="envelopePage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">♡</div>
+                        <div class="corner top-right">✦</div>
+
+                        <div class="envelope-kicker">
+                            one more thing...
+                        </div>
+
+                        <h1 class="envelope-title">
+                            I have something for you.
+                        </h1>
+
+                        <p class="envelope-subtitle">
+                            but you'll have to open it yourself. ♡
+                        </p>
+
+                        <div class="envelope-area">
+
+                            <div
+                                class="envelope-wrapper"
+                                id="envelopeWrapper"
+                                onclick="openEnvelope()"
+                            >
+
+                                <div class="envelope">
+
+                                    <div class="envelope-back"></div>
+
+                                    <div class="envelope-flap"></div>
+
+                                    <div class="envelope-front"></div>
+
+                                    <div class="envelope-seal">
+                                        ♡
+                                    </div>
+
+                                </div>
+
+                                <div class="envelope-label">
+                                    open me ♡
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="hidden-letter"
+                                id="hiddenLetter"
+                            >
+
+                                <h3>
+                                    To my dearest, Kaye ♡
+                                </h3>
+
+                                <p>
+                                    Happy duppy birthday to one of the
+                                    most beautiful women I've ever seen.
+                                </p>
+
+                                <p>
+                                    I genuinely hope you have the best
+                                    birthday and an even better year ahead.
+                                    I hope life treats you kindly and gives
+                                    you more reasons to smile.
+                                </p>
+
+                                <p>
+                                    I will always be wishing that you have
+                                    the best in life, and yes,
+                                    GOOD THING MY NICKNAME IS BEST
+                                </p>
+
+                                <p>
+                                    From the first time we started talking,
+                                    I honestly didn't expect things to become
+                                    what they are now.
+                                </p>
+
+                                <p>
+                                    I wanted to know your thoughts,
+                                    your routines, the things that make
+                                    you happy, the things that make you
+                                    sad, and all the little things that
+                                    make you who you are.
+                                </p>
+
+                                <p>
+                                    And when we finally met,
+                                    I still remember how I told you I'd
+                                    hug you tightly, only for me to
+                                    completely freeze when the moment
+                                    actually came. 
+                                </p>
+
+                                <p>
+                                    But today isn't really about all of
+                                    that. Today is your birthday.
+                                    So more than anything, I just want you
+                                    to know that I hope you're happy,
+                                    appreciated, loved, and surrounded by
+                                    good things.
+                                </p>
+
+                                <p>
+                                    You deserve to enjoy your day.
+                                    You deserve to celebrate yourself.
+                                    And I hope this little thing I made
+                                    becomes one tiny part of your birthday
+                                    that makes you smile.
+                                </p>
+
+                                <p class="signature">
+                                    — from tintin, with love 
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                onclick="nextPage()"
+                            >
+                                continue →
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            04
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page story-page"
+                    id="storyPage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">✦</div>
+                        <div class="corner bottom-right">♡</div>
+
+                        <div class="story-kicker">
+                            now, let's go back...
+                        </div>
+
+                        <h1 class="story-title">
+                            Let's go back to the beginning.
+                        </h1>
+
+                        <div class="story-card">
+
+                            <p>
+                                The first time we started talking,
+                                I honestly didn't know where it would lead.
+                                Let's just say, I trust it..
+                            </p>
+
+                            <p>
+                                At first, it was just conversations.
+                                Little messages here and there.
+                                Getting to know each other.
+                                Slowly figuring out who the other person
+                                actually was.
+                            </p>
+
+                            <p>
+                                And somewhere in between all those
+                                conversations, I started noticing things.
+                                The little things you said.
+                                The way you talked.
+                                The things you liked.
+                                The things that made you laugh.
+                            </p>
+                            <p>
+                                I even remember the time when I greet you good morning
+                                and instead of replying to me, you ignored me and post a story.. 
+                                that makeS me genuinely sad, and the same time. I treat as an information
+                                na that's you, that's normal for you.
+                            </p>    
+                            <p>
+                                So this time, I'm not surprised when you completely ignore me or my messages,
+                                coz I'm aware na you will be back to me when you have the energy to do so.
+                            </p>
+                            <p>
+                                I also remember being surprised that you might
+                                actually like me too. 
+                                I was looking at your followers and
+                                following and somehow think, "mhm, she has a high standard..."
+                            </p>
+
+                            <p>
+                                Then came the first time we actually met.
+                            </p>
+
+                            <p class="story-highlight">
+                                And apparently, all my confidence
+                                disappeared that day. 
+                            </p>
+
+                            <p>
+                                I had told you I would hug you tightly,
+                                but when we were actually there,
+                                I froze.
+                            </p>
+
+                            <p>
+                                I remember wanting to just look at you
+                                for a minute because it felt strange
+                                seeing someone I had already gotten
+                                comfortable talking to suddenly standing
+                                right in front of me.
+                            </p>
+
+                            <p>
+                                Looking back, it's kind of funny how
+                                one ordinary conversation eventually
+                                became something I genuinely started
+                                caring about.
+                            </p>
+
+                            <p>
+                                And I think that's what makes this whole
+                                thing special to me.
+                                It wasn't some grand moment.
+                                It was a bunch of small moments that
+                                slowly became important.
+                            </p>
+
+                        </div>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                onclick="nextPage()"
+                            >
+                                keep going... ♡
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            05
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page feelings-page"
+                    id="feelingsPage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">♡</div>
+                        <div class="corner top-right">✦</div>
+
+                        <div class="feelings-kicker">
+                            and somewhere along the way...
+                        </div>
+
+                        <h1 class="feelings-title">
+                            I realized something.
+                        </h1>
+
+                        <div class="reveal-box">
+
+                            <div
+                                class="reveal-line"
+                                id="revealLine"
+                            >
+                                I realized I wasn't just enjoying
+                                our conversations anymore.
+                            </div>
+
+                        </div>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                id="revealButton"
+                                onclick="revealNext()"
+                            >
+                                next... ♡
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            06
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page ask-page"
+                    id="askPage"
+                >
+
+                    <div class="content">
+
+                        <div class="corner top-left">✦</div>
+                        <div class="corner bottom-right">♡</div>
+
+                        <div class="ask-kicker">
+                            okay...
+                        </div>
+
+                        <h1 class="ask-title">
+                            There's something I've wanted to ask.
+                        </h1>
+
+                        <p class="ask-text">
+                            I've thought about it for a while...
+                        </p>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                            <button
+                                class="next-button"
+                                onclick="nextPage()"
+                            >
+                                one last page →
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            07
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section
+                    class="page final-page"
+                    id="finalPage"
+                >
+
+                    <div class="content">
+
+                        <div class="final-sparkle">
+                            ✦ ♡ ✦
+                        </div>
+
+                        <h1 class="final-title">
+                            Kaye, can I officially court you? 
+                            <BR>
+                        </h1>
+                            <p>pretty please🥹</p>
+                            <Br>
+                            <Br>
+                        
+
+                        <div class="answer-buttons">
+
+                            <button
+                                class="answer yes-button"
+                                onclick="sayYes()"
+                            >
+                                YES ♡
+                            </button>
+
+                            <button
+                                class="answer no-button"
+                                id="noButton"
+                                onclick="sayNo()"
+                            >
+                                NO 
+                            </button>
+
+                        </div>
+
+                        <div
+                            class="final-result"
+                            id="finalResult"
+                        ></div>
+
+                        <div class="page-navigation">
+
+                            <button
+                                class="back-button"
+                                onclick="previousPage()"
+                            >
+                                ← back
+                            </button>
+
+                        </div>
+
+                        <div class="page-number">
+                            08
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+const pages =
+    Array.from(document.querySelectorAll(".page"));
+
+let currentPage = 0;
+
+function showPage(index) {
+
+    if (
+        index < 0 ||
+        index >= pages.length
+    ) {
+        return;
+    }
+
+    pages.forEach((page, i) => {
+
+        page.classList.remove(
+            "active",
+            "flipped"
+        );
+
+        if (i < index) {
+
+            page.classList.add("flipped");
+
+        } else if (i === index) {
+
+            page.classList.add("active");
+
+        }
+
+    });
+
+    currentPage = index;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+function nextPage() {
+
+    if (
+        currentPage <
+        pages.length - 1
+    ) {
+
+        showPage(
+            currentPage + 1
+        );
+
+    }
+
+}
+
+function previousPage() {
+
+    if (currentPage > 0) {
+
+        showPage(
+            currentPage - 1
+        );
+
+    }
+
+}
+
+function openIntro() {
+
+    const button =
+        document.getElementById(
+            "startButton"
+        );
+
+    const area =
+        document.getElementById(
+            "passcodeArea"
+        );
+
+    if (
+        area.classList.contains("show")
+    ) {
+        return;
+    }
+
+    area.classList.add("show");
+
+    button.textContent =
+        "okay, let's start →";
+
+    button.classList.add("started");
+
+}
+
+let enteredCode = "";
+
+const passcodeDots =
+    document.querySelectorAll(
+        ".passcode-dot"
+    );
+
+function updateDisplay() {
+
+    passcodeDots.forEach(
+        (dot, index) => {
+
+            if (
+                index <
+                enteredCode.length
+            ) {
+
+                dot.classList.add(
+                    "filled"
+                );
+
+            } else {
+
+                dot.classList.remove(
+                    "filled"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+function pressKey(number) {
+
+    if (
+        enteredCode.length >= 6
+    ) {
+        return;
+    }
+
+    enteredCode += number;
+
+    updateDisplay();
+
+    const message =
+        document.getElementById(
+            "unlockMessage"
+        );
+
+    message.textContent = "";
+
+    if (
+        enteredCode.length === 6
+    ) {
+
+        setTimeout(
+            () => {
+                unlockIntro();
+            },
+            180
+        );
+
+    }
+
+}
+
+function deleteKey() {
+
+    if (
+        enteredCode.length === 0
+    ) {
+        return;
+    }
+
+    enteredCode =
+        enteredCode.slice(
+            0,
+            -1
+        );
+
+    updateDisplay();
+
+}
+
+function clearCode() {
+
+    enteredCode = "";
+
+    updateDisplay();
+
+    const message =
+        document.getElementById(
+            "unlockMessage"
+        );
+
+    message.textContent = "";
+
+}
+
+function unlockIntro() {
+
+    const message =
+        document.getElementById(
+            "unlockMessage"
+        );
+
+    if (
+        enteredCode === "081926"
+    ) {
+
+        message.textContent =
+            "Unlocked ♡";
+
+        message.style.color =
+            "#765576";
+
+        setTimeout(
+            () => {
+
+                showPage(1);
+
+            },
+            500
+        );
+
+    } else {
+
+        message.textContent =
+            "not quite... try again ♡";
+
+        message.style.color =
+            "#a96d8e";
+
+        enteredCode = "";
+
+        updateDisplay();
+
+    }
+
+}
+
+let hintCount = 0;
+
+function giveIntroHint() {
+
+    const hint =
+        document.getElementById(
+            "hintText"
+        );
+
+    hintCount++;
+
+    if (hintCount === 1) {
+
+        hint.textContent =
+            "HINT: Our first conversation.";
+
+    } else if (hintCount === 2) {
+
+        hint.textContent =
+            "HINT: The date of our first conversation.";
+
+    } else {
+
+        hint.textContent =
+            "081926 GODDAMN IT ";
+
+        hintCount = 0;
+
+    }
+
+}
+
+let envelopeOpened = false;
+
+function openEnvelope() {
+
+    if (envelopeOpened) {
+        return;
+    }
+
+    envelopeOpened = true;
+
+    const wrapper =
+        document.getElementById(
+            "envelopeWrapper"
+        );
+
+    const letter =
+        document.getElementById(
+            "hiddenLetter"
+        );
+
+    wrapper.classList.add(
+        "open"
+    );
+
+    setTimeout(
+        () => {
+
+            letter.classList.add(
+                "show"
+            );
+
+        },
+        700
+    );
+
+}
+
+const revealLines = [
+
+    "I realized I wasn't just enjoying our conversations anymore.",
+
+    "I started looking forward to hearing from you.",
+
+    "I started wanting to know more about you.",
+
+    "And I started thinking about what it would be like to make this something more intentional.",
+
+    "Not because I want to rush anything.",
+
+    "But because I genuinely like you.",
+
+    "And that's when I realized... I had something I wanted to ask you."
+
+];
+
+let revealIndex = 0;
+
+function revealNext() {
+
+    const line =
+        document.getElementById(
+            "revealLine"
+        );
+
+    const button =
+        document.getElementById(
+            "revealButton"
+        );
+
+    line.classList.add(
+        "fade"
+    );
+
+    setTimeout(
+        () => {
+
+            revealIndex++;
+
+            if (
+                revealIndex <
+                revealLines.length
+            ) {
+
+                line.textContent =
+                    revealLines[
+                        revealIndex
+                    ];
+
+                line.classList.remove(
+                    "fade"
+                );
+
+            } else {
+
+                line.textContent =
+                    revealLines[
+                        revealLines.length - 1
+                    ];
+
+                line.classList.remove(
+                    "fade"
+                );
+
+                button.textContent =
+                    "okay... I'm ready →";
+
+                button.onclick =
+                    function() {
+
+                        nextPage();
+
+                    };
+
+            }
+
+        },
+        350
+    );
+
+}
+
+function sayYes() {
+
+    const result =
+        document.getElementById(
+            "finalResult"
+        );
+
+    result.textContent =
+        "I KNEW YOU WILL SAY YESS!! THANK YOU BABYY";
+
+}
+
+let noClicks = 0;
+
+const noMessages = [
+
+    "are you sure? 🥹",
+
+    "wait... think about it again 🥹",
+
+    "Kaye pls 🥹",
+
+    "you really clicked NO huh",
+
+    "okay okay... one more chance? 🥹",
+
+    "last chance. I'm serious ",
+
+    "..."
+
+];
+
+function sayNo() {
+
+    const button =
+        document.getElementById(
+            "noButton"
+        );
+
+    const result =
+        document.getElementById(
+            "finalResult"
+        );
+
+    noClicks++;
+
+    if (
+        noClicks <
+        noMessages.length
+    ) {
+
+        result.textContent =
+            noMessages[
+                noClicks - 1
+            ];
+
+        const randomX =
+            Math.floor(
+                Math.random() * 100
+            ) - 50;
+
+        const randomY =
+            Math.floor(
+                Math.random() * 60
+            ) - 30;
+
+        button.style.transform =
+            `translate(${randomX}px, ${randomY}px)`;
+
+    } else {
+
+        button.textContent =
+            "YES, I'VE BEEN WAITING FOR THIS 💜";
+
+        button.classList.remove(
+            "no-button"
+        );
+
+        button.classList.add(
+            "yes-button"
+        );
+
+        button.onclick =
+            sayYes;
+
+        result.textContent =
+            "...";
+
+        button.style.transform =
+            "none";
+
+    }
+
+}
+
+showPage(0);
+
+</script>
+
+</body>
+</html>
