@@ -81,6 +81,7 @@ img {
     width: 100%;
     height: 100%;
     position: relative;
+    transform-style: preserve-3d;
 }
 
 .page {
@@ -103,15 +104,14 @@ img {
         0 4px 12px rgba(71, 45, 85, 0.12);
     transform-origin: left center;
     transform: rotateY(0deg);
-    transition:
-        transform 0.9s cubic-bezier(.77,0,.18,1),
-        opacity 0.3s ease;
+    transform-style: preserve-3d;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     overflow: hidden;
     visibility: hidden;
-    opacity: 0;
+    opacity: 1;
     z-index: 1;
+    will-change: transform;
 }
 
 .page.active {
@@ -120,12 +120,30 @@ img {
     z-index: 20;
 }
 
-.page.flipped {
-    transform: rotateY(-180deg);
+.page.flip-target {
     visibility: visible;
     opacity: 1;
-    z-index: 10;
+    z-index: 10 !important;
+    transform: rotateY(0deg);
 }
+
+.page.flip-cover {
+    visibility: visible;
+    opacity: 1;
+    z-index: 50 !important;
+    pointer-events: none;
+}
+
+.page.flip-cover.flipping-forward {
+    transform-origin: left center !important;
+    transform: rotateY(-180deg) !important;
+}
+
+.page.flip-cover.flipping-backward {
+    transform-origin: right center !important;
+    transform: rotateY(180deg) !important;
+}
+
 
 .content {
     width: 100%;
@@ -396,10 +414,6 @@ img {
     z-index: 3;
 }
 
-.map-label.camarin {
-    top: 12%;
-    left: 10%;
-}
 
 .map-label.caloocan {
     top: 22%;
@@ -411,11 +425,6 @@ img {
     left: 13%;
 }
 
-.map-label.river {
-    bottom: 25%;
-    right: 10%;
-    color: #5d8e91;
-}
 
 .pin {
     position: absolute;
@@ -1236,14 +1245,6 @@ img {
     margin-bottom: 18px;
 }
 
-.ask-text {
-    font-family: "Playfair Display", serif;
-    color: #786678;
-    font-size: 17px;
-    line-height: 1.8;
-    max-width: 580px;
-}
-
 .final-page .content {
     text-align: center;
 }
@@ -2015,10 +2016,81 @@ and (max-height: 700px) {
 
 }
 
+
+body {
+    transition: background 3s ease;
+}
+
+#book {
+    position: relative;
+    z-index: 2;
+}
+
+#romanticAtmosphere {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 3s ease;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 48%, rgba(220,190,225,.20), transparent 48%),
+        radial-gradient(circle at 15% 20%, rgba(194,166,214,.10), transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(238,198,219,.10), transparent 35%);
+}
+
+body.romantic-mode {
+    background: #e9e0f3;
+}
+
+body.romantic-mode #romanticAtmosphere {
+    opacity: 1;
+}
+
+.romantic-heart {
+    position: absolute;
+    bottom: -30px;
+    left: var(--left);
+    font-size: var(--size);
+    color: rgba(133, 91, 137, .22);
+    animation: romanticFloat var(--duration) linear forwards;
+    filter: blur(.1px);
+}
+
+@keyframes romanticFloat {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg) scale(.8);
+        opacity: 0;
+    }
+    12% { opacity: 1; }
+    75% { opacity: .75; }
+    100% {
+        transform: translate3d(var(--drift), -115vh, 0) rotate(18deg) scale(1.05);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body,
+    #romanticAtmosphere {
+        transition: none;
+    }
+}
+
 </style>
 </head>
 
 <body>
+
+<div id="romanticAtmosphere" aria-hidden="true"></div>
+
+<audio
+    id="letterMusic"
+    src="music/maybethenight.mp3"
+    preload="auto"
+    loop
+></audio>
 
 <div id="book">
 
@@ -2049,10 +2121,6 @@ and (max-height: 700px) {
 
                             <div class="fake-map">
 
-                                <span class="map-label camarin">
-                                    CAMARIN
-                                </span>
-
                                 <span class="map-label caloocan">
                                     CALOOCAN CITY
                                 </span>
@@ -2061,16 +2129,12 @@ and (max-height: 700px) {
                                     MALABON CITY
                                 </span>
 
-                                <span class="map-label river">
-                                    TULLAHAN RIVER
-                                </span>
-
                                 <div class="pin you">
                                     <span>♡</span>
                                 </div>
 
                                 <div class="pin-label you-label">
-                                    ME ♡
+                                    ME 
                                 </div>
 
                                 <div class="pin me">
@@ -2078,7 +2142,7 @@ and (max-height: 700px) {
                                 </div>
 
                                 <div class="pin-label me-label">
-                                    YOU ♡
+                                    YOU 
                                 </div>
 
                                 <div class="map-heart one">
@@ -2226,7 +2290,7 @@ and (max-height: 700px) {
                                     class="unlock"
                                     onclick="unlockIntro()"
                                 >
-                                    UNLOCK ♡
+                                    UNLOCK 
                                 </button>
 
                                 <button
@@ -2273,7 +2337,7 @@ and (max-height: 700px) {
                         </div>
 
                         <h1 class="welcome-title">
-                            You Made It.
+                            You Made It, YEY!
                         </h1>
 
                         <p class="welcome-text">
@@ -2358,7 +2422,7 @@ and (max-height: 700px) {
                         </p>
 
                         <h6>
-                            and send it to me
+                            and send it to me. mweheheheh
                         </h6>
 
                         <div class="birthday-doodles">
@@ -2526,7 +2590,7 @@ and (max-height: 700px) {
                         </h1>
 
                         <p class="envelope-subtitle">
-                            but you'll have to open it yourself. ♡
+                            OPPENN ITTT
                         </p>
 
                         <div class="envelope-area">
@@ -2552,7 +2616,7 @@ and (max-height: 700px) {
                                 </div>
 
                                 <div class="envelope-label">
-                                    open me ♡
+                                    open me open meee
                                 </div>
 
                             </div>
@@ -2850,12 +2914,8 @@ and (max-height: 700px) {
                         <div class="corner bottom-right">♡</div>
 
                         <h1 class="ask-title">
-                            There's something I've wanted to ask.
+                            Again, there's something I've wanted to ask :>
                         </h1>
-
-                        <p class="ask-text">
-                            I've thought about it for a while...
-                        </p>
 
                         <div class="page-navigation">
 
@@ -2891,14 +2951,14 @@ and (max-height: 700px) {
                     <div class="content">
 
                         <div class="final-sparkle">
-                            ✦ ♡ ✦
+                            ✦        ✦
                         </div>
 
                         <h1 class="final-title">
                             Kaye, can I officially court you? 
                             <BR>
                         </h1>
-                            <p>pretty please🥹</p>
+                            <p>pretty please 🥹</p>
                             <Br>
                             <Br>
                         
@@ -2909,7 +2969,7 @@ and (max-height: 700px) {
                                 class="answer yes-button"
                                 onclick="sayYes()"
                             >
-                                YES ♡
+                                YESSS
                             </button>
 
                             <button
@@ -2953,74 +3013,119 @@ and (max-height: 700px) {
 
 <script>
 
-const pages =
-    Array.from(document.querySelectorAll(".page"));
+const pages = Array.from(document.querySelectorAll(".page"));
 
 let currentPage = 0;
+let isPageTurning = false;
+const FLIP_DURATION = 900;
 
-function showPage(index) {
+function resetPage(page) {
+    page.classList.remove(
+        "active",
+        "flip-target",
+        "flip-cover",
+        "flipping-forward",
+        "flipping-backward"
+    );
 
+    page.style.transform = "";
+    page.style.transformOrigin = "";
+    page.style.transition = "";
+    page.style.zIndex = "";
+    page.style.visibility = "hidden";
+    page.style.pointerEvents = "";
+}
+
+function showPage(index, direction = null) {
     if (
         index < 0 ||
-        index >= pages.length
+        index >= pages.length ||
+        index === currentPage ||
+        isPageTurning
     ) {
         return;
     }
 
-    pages.forEach((page, i) => {
+    const current = pages[currentPage];
+    const target = pages[index];
+    const goingForward = direction !== "backward";
 
-        page.classList.remove(
-            "active",
-            "flipped"
-        );
+    isPageTurning = true;
 
-        if (i < index) {
-
-            page.classList.add("flipped");
-
-        } else if (i === index) {
-
-            page.classList.add("active");
-
-        }
-
-    });
-
-    currentPage = index;
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
-}
-
-function nextPage() {
-
-    if (
-        currentPage <
-        pages.length - 1
-    ) {
-
-        showPage(
-            currentPage + 1
-        );
-
+    if (index === 0) {
+        stopRomanticAtmosphere();
+        stopLetterMusic();
     }
 
+    pages.forEach((page, i) => {
+        if (i !== currentPage && i !== index) {
+            page.classList.remove("active", "flip-target", "flip-cover", "flipping-forward", "flipping-backward");
+            page.style.visibility = "hidden";
+            page.style.zIndex = "";
+            page.style.transform = "";
+            page.style.transformOrigin = "";
+        }
+    });
+
+    target.classList.remove("active", "flip-cover", "flipping-forward", "flipping-backward");
+    target.classList.add("flip-target");
+    target.style.visibility = "visible";
+    target.style.opacity = "1";
+    target.style.zIndex = "10";
+    target.style.transform = "rotateY(0deg)";
+    target.style.transformOrigin = goingForward ? "left center" : "right center";
+
+    current.classList.remove("flip-target", "flipping-forward", "flipping-backward");
+    current.classList.add("active", "flip-cover");
+    current.style.visibility = "visible";
+    current.style.opacity = "1";
+    current.style.zIndex = "50";
+    current.style.pointerEvents = "none";
+    current.style.transformOrigin = goingForward ? "left center" : "right center";
+    current.style.transform = "rotateY(0deg)";
+    current.style.transition = `transform ${FLIP_DURATION}ms cubic-bezier(.77, 0, .18, 1)`;
+
+    void current.offsetWidth;
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            current.classList.add(
+                goingForward ? "flipping-forward" : "flipping-backward"
+            );
+        });
+    });
+
+    window.setTimeout(() => {
+        resetPage(current);
+
+        target.classList.remove("flip-target");
+        target.classList.add("active");
+        target.style.visibility = "visible";
+        target.style.opacity = "1";
+        target.style.zIndex = "20";
+        target.style.transform = "rotateY(0deg)";
+        target.style.transformOrigin = "";
+        target.style.transition = "";
+        target.style.pointerEvents = "";
+
+        currentPage = index;
+        isPageTurning = false;
+    }, FLIP_DURATION + 80);
+}
+
+
+function nextPage() {
+    if (currentPage < pages.length - 1) {
+        showPage(currentPage + 1, "forward");
+    }
 }
 
 function previousPage() {
-
     if (currentPage > 0) {
-
-        showPage(
-            currentPage - 1
-        );
-
+        showPage(currentPage - 1, "backward");
     }
-
 }
+
 
 function openIntro() {
 
@@ -3043,7 +3148,7 @@ function openIntro() {
     area.classList.add("show");
 
     button.textContent =
-        "okay, let's start →";
+        "okay, let's start";
 
     button.classList.add("started");
 
@@ -3105,13 +3210,7 @@ function pressKey(number) {
     if (
         enteredCode.length === 6
     ) {
-
-        setTimeout(
-            () => {
-                unlockIntro();
-            },
-            180
-        );
+        unlockIntro();
 
     }
 
@@ -3162,10 +3261,13 @@ function unlockIntro() {
     ) {
 
         message.textContent =
-            "Unlocked ♡";
+            "Unlocked";
 
         message.style.color =
             "#765576";
+
+        startRomanticAtmosphere();
+        startLetterMusic();
 
         setTimeout(
             () => {
@@ -3225,6 +3327,170 @@ function giveIntroHint() {
 }
 
 let envelopeOpened = false;
+let musicStarted = false;
+let musicFadeFrame = null;
+let musicRampTimers = [];
+let romanticHeartTimer = null;
+
+function fadeLetterMusic(targetVolume, duration = 2200) {
+
+    const music = document.getElementById("letterMusic");
+
+    if (!music) return;
+
+    if (musicFadeFrame) {
+        cancelAnimationFrame(musicFadeFrame);
+    }
+
+    const startVolume = music.volume;
+    const startTime = performance.now();
+
+    function step(now) {
+
+        const progress = Math.min(
+            1,
+            (now - startTime) / duration
+        );
+
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        music.volume =
+            startVolume +
+            (targetVolume - startVolume) * eased;
+
+        if (progress < 1) {
+            musicFadeFrame = requestAnimationFrame(step);
+        } else {
+            musicFadeFrame = null;
+        }
+    }
+
+    musicFadeFrame = requestAnimationFrame(step);
+}
+
+function createRomanticHeart() {
+
+    const atmosphere =
+        document.getElementById("romanticAtmosphere");
+
+    if (!atmosphere || !document.body.classList.contains("romantic-mode")) {
+        return;
+    }
+
+    const heart = document.createElement("span");
+
+    heart.className = "romantic-heart";
+    heart.textContent = Math.random() > .35 ? "♡" : "✦";
+    heart.style.setProperty("--left", `${Math.random() * 100}%`);
+    heart.style.setProperty("--size", `${10 + Math.random() * 12}px`);
+    heart.style.setProperty("--duration", `${7 + Math.random() * 5}s`);
+    heart.style.setProperty("--drift", `${-45 + Math.random() * 90}px`);
+
+    atmosphere.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 13000);
+}
+
+function startRomanticAtmosphere() {
+
+    document.body.classList.add("romantic-mode");
+
+    if (!romanticHeartTimer) {
+        for (let i = 0; i < 5; i++) {
+            setTimeout(createRomanticHeart, i * 450);
+        }
+
+        romanticHeartTimer = setInterval(
+            createRomanticHeart,
+            1800
+        );
+    }
+}
+
+function stopRomanticAtmosphere() {
+
+    document.body.classList.remove("romantic-mode");
+
+    if (romanticHeartTimer) {
+        clearInterval(romanticHeartTimer);
+        romanticHeartTimer = null;
+    }
+
+    const atmosphere =
+        document.getElementById("romanticAtmosphere");
+
+    if (atmosphere) {
+        atmosphere.innerHTML = "";
+    }
+}
+
+function startLetterMusic() {
+
+    const music = document.getElementById("letterMusic");
+
+    if (!music || musicStarted) {
+        return;
+    }
+
+    musicStarted = true;
+
+    musicRampTimers.forEach(timer => clearTimeout(timer));
+    musicRampTimers = [];
+
+    music.volume = 0.008;
+
+    const playAttempt = music.play();
+
+    const beginRamp = () => {
+
+        const stages = [
+            { after: 4000, volume: 0.007 },
+            { after: 9000, volume: 0.015 },
+            { after: 14000, volume: 0.027 },
+            { after: 19000, volume: 0.040 },
+            { after: 25000, volume: 0.055 },
+            { after: 32000, volume: 0.075 }
+        ];
+
+        stages.forEach(stage => {
+            const timer = setTimeout(() => {
+                fadeLetterMusic(stage.volume, 1800);
+            }, stage.after);
+
+            musicRampTimers.push(timer);
+        });
+    };
+
+    if (playAttempt && typeof playAttempt.then === "function") {
+        playAttempt
+            .then(beginRamp)
+            .catch(() => {
+                musicStarted = false;
+            });
+    } else {
+        beginRamp();
+    }
+}
+
+function stopLetterMusic() {
+
+    const music = document.getElementById("letterMusic");
+
+    if (!music) return;
+
+    musicRampTimers.forEach(timer => clearTimeout(timer));
+    musicRampTimers = [];
+
+    fadeLetterMusic(0, 1200);
+
+    setTimeout(() => {
+        if (music.volume <= .01) {
+            music.pause();
+            music.currentTime = 0;
+            musicStarted = false;
+        }
+    }, 1250);
+}
 
 function openEnvelope() {
 
@@ -3353,7 +3619,19 @@ function sayYes() {
         );
 
     result.textContent =
-        "I KNEW YOU WILL SAY YESS!! THANK YOU BABYY";
+        "YEEEYYYY, THANK YOU SO MUCH FOR SAYING YES BABYY!! ";
+
+}
+
+function sayForcedYes() {
+
+    const result =
+        document.getElementById(
+            "finalResult"
+        );
+
+    result.textContent =
+        "I KNEW YOU WILL SAY YES, YEHEEYYY!!";
 
 }
 
@@ -3428,7 +3706,7 @@ function sayNo() {
         );
 
         button.onclick =
-            sayYes;
+            sayForcedYes;
 
         result.textContent =
             "...";
